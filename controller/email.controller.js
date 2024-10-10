@@ -14,7 +14,7 @@ const emailController = async (req, res) => {
     await email_data.save();
     await sendMail(email, code);
 
-    res.status(200).json({ message: "Email sent successfully",data:email_data });
+    res.status(200).json({ message: "Email sent successfully",statusCode:200,data:email_data });
   } catch (error) {
     console.error("error sending mail", error);
     res.status(500).json({ error: "internal server error" });
@@ -27,7 +27,7 @@ const verifyCode = async (req, res) => {
     const emailData = await Email.findOne({ email, code });
 
     if (!emailData) {
-      res.status(401).json({ message: "Incorrect code." });
+      res.status(200).json({ message: "Incorrect code.",statusCode:401 });
     } else if (emailData.code === code && emailData.email === email) {
       res.status(200).json({ message: "code verified",statusCode:200 ,data:emailData});
     } else {

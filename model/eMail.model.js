@@ -1,16 +1,12 @@
 import mongoose from "mongoose";
 
 const emailSchema = mongoose.Schema({
-  to: {
+  email: {
     type: String,
     required: true,
   },
-  subject: {
-    type: String,
-    required: true,
-  },
-  message: {
-    type: String,
+  code: {
+    type: Number,
     required: true,
   },
   sentAt: {

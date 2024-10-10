@@ -12,13 +12,31 @@ const emailController = async (req, res) => {
       code,
     });
     await email_data.save();
-    await sendMail(email,code);
+    await sendMail(email, code);
 
-    res.status(200).json({ message: "Email sent successfully" });
+    res.status(200).json({ message: "Email sent successfully",data:email_data });
   } catch (error) {
     console.error("error sending mail", error);
     res.status(500).json({ error: "internal server error" });
   }
 };
 
-export { emailController };
+const verifyCode = async (req, res) => {
+  const { email, code } = req.body;
+  try {
+    const emailData = await Email.findOne({ email, code });
+
+    if (!emailData) {
+      res.status(401).json({ message: "Incorrect code." });
+    } else if (emailData.code === code && emailData.email === email) {
+      res.status(200).json({ message: "code verified",statusCode:200 ,data:emailData});
+    } else {
+      res.status(401).json({ message: "invalid code" });
+    }
+  } catch (error) {
+    console.error("error for verify code", error);
+    res.status(500).json({ error: "internal server error" });
+  }
+};
+
+export { emailController, verifyCode };
